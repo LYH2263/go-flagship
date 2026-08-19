@@ -55,5 +55,17 @@ func (t *Table) Export() []Record {
 }
 
 func cloneRecord(r Record) Record {
-	return r
+	rules := make([]Rule, len(r.Rules))
+	for i, rule := range r.Rules {
+		vals := append([]string(nil), rule.Values...)
+		rules[i] = Rule{Attr: rule.Attr, Op: rule.Op, Values: vals}
+	}
+	return Record{
+		Key:         r.Key,
+		Enabled:     r.Enabled,
+		Percent:     r.Percent,
+		Rules:       rules,
+		Description: r.Description,
+		UpdatedAt:   r.UpdatedAt,
+	}
 }

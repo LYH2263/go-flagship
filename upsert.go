@@ -74,7 +74,18 @@ func (s *Ship) UpsertContext(ctx context.Context, def FlagDef) error {
 }
 
 func cloneRules(in []Rule) []Rule {
-	return in
+	if in == nil {
+		return nil
+	}
+	out := make([]Rule, len(in))
+	for i, r := range in {
+		out[i] = Rule{
+			Attr:   r.Attr,
+			Op:     r.Op,
+			Values: append([]string(nil), r.Values...),
+		}
+	}
+	return out
 }
 
 func toSpecs(in []Rule) []rule.Spec {
@@ -91,7 +102,7 @@ func toFlagRules(in []Rule) []flag.Rule {
 		out = append(out, flag.Rule{
 			Attr:   r.Attr,
 			Op:     string(r.Op),
-			Values: r.Values,
+			Values: append([]string(nil), r.Values...),
 		})
 	}
 	return out

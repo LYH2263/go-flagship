@@ -12,5 +12,10 @@ func CloneMap(m map[string]string) map[string]string {
 }
 
 func CloneStringSlice(in []string) []string {
-	return in
+	if in == nil {
+		return nil
+	}
+	out := make([]string, len(in))
+	copy(out, in)
+	return out
 }
