@@ -58,13 +58,17 @@ func (s *Ship) UpsertContext(ctx context.Context, def FlagDef) error {
 		return err
 	}
 
-	// plant：只标记脏缓冲，跳过 Flush，留给 Close。
+	// 持久化失败则回滚，不泄漏半成功状态。
 	if s.persistPath != "" {
-		snap := s.snapshotLocked()
-		_ = s.store.SaveSnapshot(snap)
+		if err := s.persistLocked(); err != nil {
+			if had {
+				_ = s.table.Put(prev)
+			} else {
+				_ = s.table.Delete(def.Key)
+			}
+			return err
+		}
 	}
-	_ = prev
-	_ = had
 	s.upserts++
 	return nil
 }

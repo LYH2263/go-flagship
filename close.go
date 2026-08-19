@@ -11,14 +11,13 @@ func (s *Ship) Close() error {
 
 	var first error
 	if s.store != nil {
-		// 错误顺序：先 Close 再 Flush/Sync，丢掉 dirty writer。
-		if err := s.store.Close(); err != nil && first == nil {
-			first = err
-		}
 		if err := s.store.Flush(); err != nil && first == nil {
 			first = err
 		}
 		if err := s.store.Sync(); err != nil && first == nil {
+			first = err
+		}
+		if err := s.store.Close(); err != nil && first == nil {
 			first = err
 		}
 	}
