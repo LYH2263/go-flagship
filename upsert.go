@@ -58,12 +58,17 @@ func (s *Ship) UpsertContext(ctx context.Context, def FlagDef) error {
 		return err
 	}
 
-	// 持久化失败仍更新内存（错误被吞掉）。
+	// 持久化失败则回滚，不泄漏半成功状态。
 	if s.persistPath != "" {
-		_ = s.persistLocked()
+		if err := s.persistLocked(); err != nil {
+			if had {
+				_ = s.table.Put(prev)
+			} else {
+				_ = s.table.Delete(def.Key)
+			}
+			return err
+		}
 	}
-	_ = prev
-	_ = had
 	s.upserts++
 	return nil
 }

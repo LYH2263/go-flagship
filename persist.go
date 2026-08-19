@@ -11,7 +11,9 @@ func (s *Ship) Flush() error {
 	if s.persistPath == "" {
 		return nil
 	}
-	_ = s.store.Flush()
+	if err := s.store.Flush(); err != nil {
+		return ierr.WrapErr(ErrPersist, err)
+	}
 	return nil
 }
 
