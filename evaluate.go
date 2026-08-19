@@ -28,8 +28,17 @@ func (s *Ship) EvaluateContext(ctx context.Context, key string, a EvalAttrs) (De
 		return Decision{}, err
 	}
 
+	// nil-guard：hasher/rollout 为空时安装默认，避免 Evaluate 解引用 nil。
 	hasher := s.hasher
+	if hasher == nil {
+		hasher = rollout.DefaultHasher()
+		s.hasher = hasher
+	}
 	ro := s.rollout
+	if ro == nil {
+		ro = rollout.Default()
+		s.rollout = ro
+	}
 
 	rec, ok := s.table.Get(key)
 	if !ok {
