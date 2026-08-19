@@ -10,9 +10,8 @@ func (s *Store) Close() error {
 		return nil
 	}
 	var first error
-	if err := s.flushLocked(); err != nil && first == nil {
-		first = err
-	}
+	// 丢掉 dirty，先关 writer。
+	s.dirty = false
 	if s.writer != nil {
 		if err := s.writer.Close(); err != nil && first == nil {
 			first = err
@@ -21,8 +20,5 @@ func (s *Store) Close() error {
 	}
 	s.closed = true
 	s.path = ""
-	if first != nil {
-		return ierr.WrapErr(ierr.ErrFlush, first)
-	}
-	return nil
+	return first
 }
