@@ -23,6 +23,7 @@ func (s *Ship) Close() error {
 	}
 	// nil-after-close
 	s.store = nil
+	s.table = nil
 	return first
 }
 

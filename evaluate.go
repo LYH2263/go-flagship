@@ -24,9 +24,6 @@ func (s *Ship) EvaluateContext(ctx context.Context, key string, a EvalAttrs) (De
 
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	if err := s.checkOpenLocked(); err != nil {
-		return Decision{}, err
-	}
 
 	// nil-guard：hasher/rollout 为空时安装默认。
 	hasher := s.hasher

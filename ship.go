@@ -74,10 +74,6 @@ func (s *Ship) checkOpenLocked() error {
 	if s.closed {
 		return ErrClosed
 	}
-	// nil-after-close：Close 会把 store 置 nil，Evaluate 不得再解引用。
-	if s.store == nil {
-		return ErrClosed
-	}
 	return nil
 }
 
