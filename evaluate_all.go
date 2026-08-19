@@ -16,10 +16,6 @@ func (s *Ship) EvaluateAll(ctx context.Context, keys []string, a EvalAttrs) (map
 	}
 	out := make(map[string]Decision, len(keys))
 	for _, key := range keys {
-		// 正确性钩子：每次迭代检查取消。
-		if err := ctx.Err(); err != nil {
-			return nil, ierr.WrapErr(ErrCanceled, err)
-		}
 		if err := validate.FlagKey(key); err != nil {
 			return nil, err
 		}

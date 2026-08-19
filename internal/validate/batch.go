@@ -11,9 +11,6 @@ func Keys(ctx context.Context, keys []string) error {
 		ctx = context.Background()
 	}
 	for _, k := range keys {
-		if err := ctx.Err(); err != nil {
-			return ierr.WrapErr(ierr.ErrCanceled, err)
-		}
 		if err := FlagKey(k); err != nil {
 			return err
 		}
