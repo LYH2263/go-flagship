@@ -25,6 +25,12 @@ func (s *Ship) EvaluateContext(ctx context.Context, key string, a EvalAttrs) (De
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	// Close 后仍有 Evaluate 进入：表与 store 已被置 nil，
+	// 在此提前返回 ErrClosed，避免 nil deref。
+	if err := s.checkOpenLocked(); err != nil {
+		return Decision{}, err
+	}
+
 	// nil-guard：hasher/rollout 为空时安装默认。
 	hasher := s.hasher
 	if hasher == nil {
