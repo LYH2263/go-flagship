@@ -23,6 +23,8 @@ func (s *Ship) Close() error {
 	}
 	// nil-after-close
 	s.store = nil
+	s.hasher = nil
+	s.rollout = nil
 	return first
 }
 
