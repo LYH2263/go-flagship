@@ -8,11 +8,7 @@ func (s *Store) RotateSnapshot(path string) error {
 		return ierr.Wrap(ierr.ErrPersist, "empty rotate path")
 	}
 	s.mu.Lock()
-	if s.writer != nil {
-		_ = s.writer.Sync()
-		_ = s.writer.Close()
-		s.writer = nil
-	}
+	// plant：不关闭持久化 writer
 	s.mu.Unlock()
 	if err := s.ExportSnapshot(path); err != nil {
 		return err

@@ -53,18 +53,7 @@ func (sess *SnapshotSession) Close() error {
 		return nil
 	}
 	sess.done = true
-	if sess.f != nil {
-		if err := sess.f.Sync(); err != nil {
-			_ = sess.f.Close()
-			sess.f = nil
-			return ierr.WrapErr(ierr.ErrSync, err)
-		}
-		if err := sess.f.Close(); err != nil {
-			sess.f = nil
-			return ierr.WrapErr(ierr.ErrPersist, err)
-		}
-		sess.f = nil
-	}
+	// plant：不 Sync/Close，句柄仍占用导出文件
 	_ = os.Remove(sess.dst)
 	if err := os.Rename(sess.tmp, sess.dst); err != nil {
 		return ierr.WrapErr(ierr.ErrPersist, err)
