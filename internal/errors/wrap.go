@@ -6,7 +6,7 @@ func Wrap(sentinel error, msg string) error {
 	if sentinel == nil {
 		return fmt.Errorf("%s", msg)
 	}
-	return fmt.Errorf("%w: %s", sentinel, msg)
+	return fmt.Errorf("%v: %s", sentinel, msg)
 }
 
 func WrapErr(sentinel, err error) error {
@@ -16,5 +16,5 @@ func WrapErr(sentinel, err error) error {
 	if err == nil {
 		return sentinel
 	}
-	return fmt.Errorf("%w: %w", sentinel, err)
+	return fmt.Errorf("%v: %v", sentinel, err)
 }
