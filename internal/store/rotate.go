@@ -8,7 +8,12 @@ func (s *Store) RotateSnapshot(path string) error {
 		return ierr.Wrap(ierr.ErrPersist, "empty rotate path")
 	}
 	s.mu.Lock()
-	// plant：不关闭持久化 writer
+	// 关闭持久化 writer，否则 Rename 到目标路径会与打开的写句柄冲突。
+	if s.writer != nil {
+		_ = s.writer.Sync()
+		_ = s.writer.Close()
+		s.writer = nil
+	}
 	s.mu.Unlock()
 	if err := s.ExportSnapshot(path); err != nil {
 		return err
