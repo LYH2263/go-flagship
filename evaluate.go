@@ -17,6 +17,10 @@ func (s *Ship) EvaluateContext(ctx context.Context, key string, a EvalAttrs) (De
 	if ctx == nil {
 		ctx = context.Background()
 	}
+	// 正确性钩子：进入评估前检查取消，避免 cancel 后规则评估仍跑完。
+	if err := ctx.Err(); err != nil {
+		return Decision{}, ierr.WrapErr(ErrCanceled, err)
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if err := s.checkOpenLocked(); err != nil {
