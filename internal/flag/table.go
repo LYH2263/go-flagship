@@ -55,5 +55,6 @@ func (t *Table) Export() []Record {
 }
 
 func cloneRecord(r Record) Record {
+	r.Rules = CloneRules(r.Rules)
 	return r
 }
