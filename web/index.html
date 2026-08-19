@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>特性开关</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>特性开关</h1>
+    <p class="sub">Upsert 规则 · 百分比灰度 · 试算 Evaluate</p>
+  </header>
+  <main>
+    <section>
+      <h2>Upsert Flag</h2>
+      <form id="upsert-form">
+        <label>Key <input name="key" required placeholder="dark_mode" /></label>
+        <label>Enabled <input name="enabled" type="checkbox" checked /></label>
+        <label>Percent <input name="percent" type="number" min="0" max="100" value="100" /></label>
+        <label>Rule attr <input name="attr" value="org" /></label>
+        <label>Rule op
+          <select name="op">
+            <option value="eq">eq</option>
+            <option value="in">in</option>
+            <option value="exists">exists</option>
+          </select>
+        </label>
+        <label>Rule values <input name="values" value="acme" /></label>
+        <label>Description <input name="description" /></label>
+        <button type="submit">Upsert</button>
+      </form>
+      <pre id="upsert-out"></pre>
+    </section>
+    <section>
+      <h2>Flags</h2>
+      <button type="button" id="refresh">刷新</button>
+      <ul id="flags"></ul>
+    </section>
+    <section>
+      <h2>试算 Evaluate</h2>
+      <form id="eval-form">
+        <label>Key <input name="key" required /></label>
+        <label>Attrs JSON <textarea name="attrs" rows="4">{"org":"acme","user":"u1"}</textarea></label>
+        <button type="submit">Evaluate</button>
+      </form>
+      <pre id="eval-out"></pre>
+    </section>
+    <section>
+      <h2>Stats</h2>
+      <pre id="stats"></pre>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
