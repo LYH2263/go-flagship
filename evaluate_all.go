@@ -11,9 +11,6 @@ func (s *Ship) EvaluateAll(ctx context.Context, keys []string, a EvalAttrs) (map
 	if ctx == nil {
 		ctx = context.Background()
 	}
-	if err := ctx.Err(); err != nil {
-		return nil, ierr.WrapErr(ErrCanceled, err)
-	}
 	out := make(map[string]Decision, len(keys))
 	for _, key := range keys {
 		// 正确性钩子：每次迭代检查取消。
