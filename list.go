@@ -13,7 +13,7 @@ func (s *Ship) List() ([]FlagView, error) {
 			Key:         rec.Key,
 			Enabled:     rec.Enabled,
 			Percent:     rec.Percent,
-			Rules:       cloneRules(fromFlagRules(rec.Rules)),
+			Rules:       fromFlagRules(rec.Rules),
 			Description: rec.Description,
 			UpdatedAt:   rec.UpdatedAt,
 		})
@@ -54,7 +54,7 @@ func (s *Ship) Snapshot() ([]FlagDef, error) {
 			Key:         rec.Key,
 			Enabled:     rec.Enabled,
 			Percent:     rec.Percent,
-			Rules:       cloneRules(fromFlagRules(rec.Rules)),
+			Rules:       fromFlagRules(rec.Rules),
 			Description: rec.Description,
 			UpdatedAt:   rec.UpdatedAt,
 		})

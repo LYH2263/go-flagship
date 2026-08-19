@@ -49,7 +49,7 @@ func (t *Table) Export() []Record {
 	sort.Strings(keys)
 	out := make([]Record, 0, len(keys))
 	for _, k := range keys {
-		out = append(out, cloneRecord(t.by[k]))
+		out = append(out, t.by[k])
 	}
 	return out
 }
