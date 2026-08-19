@@ -50,6 +50,13 @@ func New(opts ...Option) *Ship {
 	if s.clk == nil {
 		s.clk = clock.Real{}
 	}
+	// 正确性钩子：默认 Hasher/Rollout，供后续 plant 拆掉。
+	if s.hasher == nil {
+		s.hasher = rollout.DefaultHasher()
+	}
+	if s.rollout == nil {
+		s.rollout = rollout.Default()
+	}
 	if s.maxFlags < 1 {
 		s.maxFlags = 1
 	}
