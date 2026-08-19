@@ -29,7 +29,9 @@ func (s *Store) Load(path string) error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 	r := &fileSnapshotReader{f: f}
+	defer r.Close()
 	return s.loadFromReader(r)
 }
 
