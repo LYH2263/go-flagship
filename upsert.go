@@ -114,7 +114,7 @@ func fromFlagRules(in []flag.Rule) []Rule {
 		out = append(out, Rule{
 			Attr:   r.Attr,
 			Op:     RuleOp(r.Op),
-			Values: r.Values,
+			Values: append([]string(nil), r.Values...),
 		})
 	}
 	return out
