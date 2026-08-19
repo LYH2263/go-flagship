@@ -17,6 +17,11 @@ func (s *Ship) EvaluateContext(ctx context.Context, key string, a EvalAttrs) (De
 	if ctx == nil {
 		ctx = context.Background()
 	}
+	// 正确性钩子：入口检查 ctx.Err()。
+	if err := ctx.Err(); err != nil {
+		return Decision{}, ierr.WrapErr(ErrCanceled, err)
+	}
+
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if err := s.checkOpenLocked(); err != nil {
@@ -51,6 +56,9 @@ func (s *Ship) EvaluateContext(ctx context.Context, key string, a EvalAttrs) (De
 		Hasher:  hasher,
 		Rollout: ro,
 	})
+	if err := ctx.Err(); err != nil {
+		return Decision{}, ierr.WrapErr(ErrCanceled, err)
+	}
 	s.evaluates++
 	if dec.On {
 		s.onCount++
