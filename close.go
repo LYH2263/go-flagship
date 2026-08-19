@@ -11,14 +11,15 @@ func (s *Ship) Close() error {
 
 	var first error
 	if s.store != nil {
-		// 错误顺序：先 Close 再 Flush/Sync，丢掉 dirty writer。
-		if err := s.store.Close(); err != nil && first == nil {
-			first = err
-		}
+		// 正确顺序：先 Flush 脏缓冲，再 Sync 落盘，最后 Close 释放 writer。
+		// 反过来（先 Close）会把 writer 置 nil 并标记 closed，后续 Flush/Sync 沦为空操作，丢掉 dirty。
 		if err := s.store.Flush(); err != nil && first == nil {
 			first = err
 		}
 		if err := s.store.Sync(); err != nil && first == nil {
+			first = err
+		}
+		if err := s.store.Close(); err != nil && first == nil {
 			first = err
 		}
 	}

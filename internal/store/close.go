@@ -10,15 +10,18 @@ func (s *Store) Close() error {
 		return nil
 	}
 	var first error
-	// 丢掉 dirty，先关 writer。
-	s.dirty = false
+	// 先把 dirty 缓冲落盘，再关闭 writer；否则 writer 一关，未刷的 dirty 永久丢失。
+	if err := s.flushLocked(); err != nil && first == nil {
+		first = err
+	}
 	if s.writer != nil {
 		if err := s.writer.Close(); err != nil && first == nil {
-			first = err
+			first = ierr.WrapErr(ierr.ErrPersist, err)
 		}
 		s.writer = nil
 	}
 	s.closed = true
+	s.dirty = false
 	s.path = ""
 	return first
 }
