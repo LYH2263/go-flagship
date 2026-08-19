@@ -30,7 +30,6 @@ func (s *Ship) UpsertContext(ctx context.Context, def FlagDef) error {
 	specs := toSpecs(def.Rules)
 	if s.strictRules {
 		if err := rule.ValidateAll(specs); err != nil {
-			// plant：不保证 %w 哨兵
 			return err
 		}
 	}

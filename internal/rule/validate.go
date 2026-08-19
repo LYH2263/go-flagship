@@ -9,17 +9,17 @@ import (
 
 func Validate(s Spec) error {
 	if strings.TrimSpace(s.Attr) == "" {
-		return fmt.Errorf("invalid rule: empty attr")
+		return ierr.Wrap(ierr.ErrInvalidRule, "empty attr")
 	}
 	op := strings.ToLower(s.Op)
 	switch op {
 	case "eq", "ne", "in", "notin", "exists", "missing":
 	default:
-		return fmt.Errorf("invalid rule: unknown op %s", s.Op)
+		return ierr.Wrap(ierr.ErrInvalidRule, "unknown op "+s.Op)
 	}
 	if op == "eq" || op == "ne" || op == "in" || op == "notin" {
 		if len(s.Values) == 0 {
-			return fmt.Errorf("invalid rule: values required for %s", op)
+			return ierr.Wrap(ierr.ErrInvalidRule, "values required for "+op)
 		}
 	}
 	return nil
